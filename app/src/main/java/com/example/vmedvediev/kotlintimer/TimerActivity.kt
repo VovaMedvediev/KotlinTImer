@@ -20,7 +20,6 @@ import java.util.*
 class TimerActivity : AppCompatActivity() {
 
     companion object {
-
         val nowSeconds: Long
             get() = Calendar.getInstance().timeInMillis / 1000
     }
