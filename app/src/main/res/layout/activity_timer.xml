@@ -33,27 +33,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton_stop"
+        android:id="@+id/stopFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
         android:layout_marginEnd="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/floatingActionButton_pause"
+        app:layout_constraintEnd_toStartOf="@+id/pauseFloatingActionButton"
         app:srcCompat="@drawable/ic_stop" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton_pause"
+        android:id="@+id/pauseFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
         android:layout_marginEnd="64dp"
         app:layout_constraintBottom_toBottomOf="@+id/include"
-        app:layout_constraintEnd_toStartOf="@+id/floatingActionButton_start"
+        app:layout_constraintEnd_toStartOf="@+id/startFloatingActionButton"
         app:srcCompat="@drawable/ic_pause" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton_start"
+        android:id="@+id/startFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
