@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.vmedvediev.kotlintimer.AlarmManager.removeAlarm
 import com.example.vmedvediev.kotlintimer.AlarmManager.setAlarm
-import com.example.vmedvediev.kotlintimer.R.id.fab_start
 import com.example.vmedvediev.kotlintimer.util.NotificationUtil
 import com.example.vmedvediev.kotlintimer.util.PrefUtil
 import kotlinx.android.synthetic.main.activity_timer.*
@@ -18,10 +17,10 @@ import java.util.*
 class TimerActivity : AppCompatActivity() {
 
     companion object {
-        const val millsInOneSecond = 1000
-        const val secondsInOneMinute = 60
+        const val MILLS_IN_ONE_SECOND = 1000
+        const val SECONDS_IN_ONE_MINUTE = 60
         val nowSeconds: Long
-            get() = Calendar.getInstance().timeInMillis / millsInOneSecond
+            get() = Calendar.getInstance().timeInMillis / MILLS_IN_ONE_SECOND
     }
 
     private lateinit var timer: CountDownTimer
@@ -82,9 +81,9 @@ class TimerActivity : AppCompatActivity() {
         }
 
         PrefUtil.apply {
-            setPreviousTimerLengthSeconds(timerLengthSeconds, applicationContext)
-            setSecondsRemaining(secondsRemaining, applicationContext)
-            setTimerState(timerState, applicationContext)
+            setPreviousTimerLengthSeconds(applicationContext, timerLengthSeconds)
+            setSecondsRemaining(applicationContext, secondsRemaining)
+            setTimerState(applicationContext, timerState)
         }
     }
 
@@ -120,7 +119,7 @@ class TimerActivity : AppCompatActivity() {
 
         progress_countdown.progress = 0
 
-        PrefUtil.setSecondsRemaining(timerLengthSeconds, this)
+        PrefUtil.setSecondsRemaining(this, timerLengthSeconds)
         secondsRemaining = timerLengthSeconds
 
         updateButtons()
@@ -131,12 +130,12 @@ class TimerActivity : AppCompatActivity() {
         val countDownInterval = 1000L
         timerState = TimerState.Running
 
-        timer = object : CountDownTimer(secondsRemaining * millsInOneSecond, countDownInterval) {
+        timer = object : CountDownTimer(secondsRemaining * MILLS_IN_ONE_SECOND, countDownInterval) {
 
             override fun onFinish() = onTimerFinished()
 
             override fun onTick(millisUntilFinished: Long) {
-                secondsRemaining = millisUntilFinished / millsInOneSecond
+                secondsRemaining = millisUntilFinished / MILLS_IN_ONE_SECOND
                 updateCountdownUI()
             }
         }.start()
@@ -144,7 +143,7 @@ class TimerActivity : AppCompatActivity() {
 
     private fun setNewTimerLength() {
         val lengthInMinutes = PrefUtil.getTimerLength(this)
-        timerLengthSeconds = ((lengthInMinutes * secondsInOneMinute).toLong())
+        timerLengthSeconds = ((lengthInMinutes * SECONDS_IN_ONE_MINUTE).toLong())
         progress_countdown.max = timerLengthSeconds.toInt()
     }
 
@@ -154,8 +153,8 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun updateCountdownUI() {
-        val minutesUntilFinished = secondsRemaining / secondsInOneMinute
-        val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * secondsInOneMinute
+        val minutesUntilFinished = secondsRemaining / SECONDS_IN_ONE_MINUTE
+        val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * SECONDS_IN_ONE_MINUTE
         val secondsStr = secondsInMinuteUntilFinished.toString()
         textView_countdown.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
         progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
