@@ -41,20 +41,20 @@ class TimerActivity : AppCompatActivity() {
             title = "      Timer"
         }
 
-        floatingActionButton_start.setOnClickListener {
+        startFloatingActionButton.setOnClickListener {
 
             startTimer()
             timerState =  TimerState.Running
             updateButtons()
         }
 
-        floatingActionButton_pause.setOnClickListener {
+        pauseFloatingActionButton.setOnClickListener {
             timer.cancel()
             timerState = TimerState.Paused
             updateButtons()
         }
 
-        floatingActionButton_stop.setOnClickListener {
+        stopFloatingActionButton.setOnClickListener {
             timer.cancel()
             onTimerFinished()
         }
@@ -117,7 +117,7 @@ class TimerActivity : AppCompatActivity() {
         timerState = TimerState.Stopped
         setNewTimerLength()
 
-        progress_countdown.progress = 0
+        countdownProgressBar.progress = 0
 
         PrefUtil.setSecondsRemaining(this, timerLengthSeconds)
         secondsRemaining = timerLengthSeconds
@@ -144,38 +144,38 @@ class TimerActivity : AppCompatActivity() {
     private fun setNewTimerLength() {
         val lengthInMinutes = PrefUtil.getTimerLength(this)
         timerLengthSeconds = ((lengthInMinutes * SECONDS_IN_ONE_MINUTE).toLong())
-        progress_countdown.max = timerLengthSeconds.toInt()
+        countdownProgressBar.max = timerLengthSeconds.toInt()
     }
 
     private fun setPreviousTimerLength() {
         timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(this)
-        progress_countdown.max = timerLengthSeconds.toInt()
+        countdownProgressBar.max = timerLengthSeconds.toInt()
     }
 
     private fun updateCountdownUI() {
         val minutesUntilFinished = secondsRemaining / SECONDS_IN_ONE_MINUTE
         val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * SECONDS_IN_ONE_MINUTE
         val secondsStr = secondsInMinuteUntilFinished.toString()
-        textView_countdown.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
-        progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
+        countdownTextView.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
+        countdownProgressBar.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
     private fun updateButtons() {
         when (timerState) {
             TimerState.Running -> {
-                floatingActionButton_start.isEnabled = false
-                floatingActionButton_pause.isEnabled = true
-                floatingActionButton_stop.isEnabled = true
+                startFloatingActionButton.isEnabled = false
+                pauseFloatingActionButton.isEnabled = true
+                stopFloatingActionButton.isEnabled = true
             }
             TimerState.Stopped -> {
-                floatingActionButton_start.isEnabled = true
-                floatingActionButton_pause.isEnabled = false
-                floatingActionButton_stop.isEnabled = false
+                startFloatingActionButton.isEnabled = true
+                pauseFloatingActionButton.isEnabled = false
+                stopFloatingActionButton.isEnabled = false
             }
             TimerState.Paused -> {
-                floatingActionButton_start.isEnabled = true
-                floatingActionButton_pause.isEnabled = false
-                floatingActionButton_stop.isEnabled = true
+                startFloatingActionButton.isEnabled = true
+                pauseFloatingActionButton.isEnabled = false
+                stopFloatingActionButton.isEnabled = true
             }
         }
     }
