@@ -1,8 +1,5 @@
 package com.example.vmedvediev.kotlintimer
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -20,8 +17,10 @@ import java.util.*
 class TimerActivity : AppCompatActivity() {
 
     companion object {
+        const val MILLS_IN_ONE_SECOND = 1000
+        const val SECONDS_IN_ONE_MINUTE = 60
         val nowSeconds: Long
-            get() = Calendar.getInstance().timeInMillis / 1000
+            get() = Calendar.getInstance().timeInMillis / MILLS_IN_ONE_SECOND
     }
 
     private lateinit var timer: CountDownTimer
@@ -29,7 +28,7 @@ class TimerActivity : AppCompatActivity() {
     private var timerState = TimerState.Stopped
     private var secondsRemaining: Long = 0
 
-    enum class TimerState{
+    enum class TimerState {
         Stopped, Paused, Running
     }
 
@@ -42,20 +41,20 @@ class TimerActivity : AppCompatActivity() {
             title = "      Timer"
         }
 
-        fab_start.setOnClickListener{
+        floatingActionButton_start.setOnClickListener {
 
             startTimer()
             timerState =  TimerState.Running
             updateButtons()
         }
 
-        fab_pause.setOnClickListener {
+        floatingActionButton_pause.setOnClickListener {
             timer.cancel()
             timerState = TimerState.Paused
             updateButtons()
         }
 
-        fab_stop.setOnClickListener {
+        floatingActionButton_stop.setOnClickListener {
             timer.cancel()
             onTimerFinished()
         }
@@ -73,22 +72,22 @@ class TimerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
-        if (timerState == TimerState.Running){
+        if (timerState == TimerState.Running) {
             timer.cancel()
             val wakeUpTime = setAlarm(this, nowSeconds, secondsRemaining)
             NotificationUtil.showTimerRunning(this, wakeUpTime)
-        } else if (timerState == TimerState.Paused){
+        } else if (timerState == TimerState.Paused) {
             NotificationUtil.showTimerPaused(this)
         }
 
         PrefUtil.apply {
-            setPreviousTimerLengthSeconds(timerLengthSeconds, applicationContext)
-            setSecondsRemaining(secondsRemaining, applicationContext)
-            setTimerState(timerState, applicationContext)
+            setPreviousTimerLengthSeconds(applicationContext, timerLengthSeconds)
+            setSecondsRemaining(applicationContext, secondsRemaining)
+            setTimerState(applicationContext, timerState)
         }
     }
 
-    private fun initTimer(){
+    private fun initTimer() {
         timerState = PrefUtil.getTimerState(this)
 
         if (timerState == TimerState.Stopped) {
@@ -114,68 +113,69 @@ class TimerActivity : AppCompatActivity() {
         updateCountdownUI()
     }
 
-    private fun onTimerFinished(){
+    private fun onTimerFinished() {
         timerState = TimerState.Stopped
         setNewTimerLength()
 
         progress_countdown.progress = 0
 
-        PrefUtil.setSecondsRemaining(timerLengthSeconds, this)
+        PrefUtil.setSecondsRemaining(this, timerLengthSeconds)
         secondsRemaining = timerLengthSeconds
 
         updateButtons()
         updateCountdownUI()
     }
 
-    private fun startTimer(){
+    private fun startTimer() {
+        val countDownInterval = 1000L
         timerState = TimerState.Running
 
-        timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
+        timer = object : CountDownTimer(secondsRemaining * MILLS_IN_ONE_SECOND, countDownInterval) {
 
             override fun onFinish() = onTimerFinished()
 
             override fun onTick(millisUntilFinished: Long) {
-                secondsRemaining = millisUntilFinished / 1000
+                secondsRemaining = millisUntilFinished / MILLS_IN_ONE_SECOND
                 updateCountdownUI()
             }
         }.start()
     }
 
-    private fun setNewTimerLength(){
+    private fun setNewTimerLength() {
         val lengthInMinutes = PrefUtil.getTimerLength(this)
-        timerLengthSeconds = (lengthInMinutes * 60L)
+        timerLengthSeconds = ((lengthInMinutes * SECONDS_IN_ONE_MINUTE).toLong())
         progress_countdown.max = timerLengthSeconds.toInt()
     }
 
-    private fun setPreviousTimerLength(){
+    private fun setPreviousTimerLength() {
         timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(this)
         progress_countdown.max = timerLengthSeconds.toInt()
     }
 
-    private fun updateCountdownUI(){
-        val minutesUntilFinished = secondsRemaining / 60
-        val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
+    private fun updateCountdownUI() {
+        val minutesUntilFinished = secondsRemaining / SECONDS_IN_ONE_MINUTE
+        val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * SECONDS_IN_ONE_MINUTE
         val secondsStr = secondsInMinuteUntilFinished.toString()
         textView_countdown.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
         progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
-    private fun updateButtons(){
+    private fun updateButtons() {
         when (timerState) {
-            TimerState.Running ->{
-                fab_start.isEnabled = false
-                fab_pause.isEnabled = true
-                fab_stop.isEnabled = true
+            TimerState.Running -> {
+                floatingActionButton_start.isEnabled = false
+                floatingActionButton_pause.isEnabled = true
+                floatingActionButton_stop.isEnabled = true
             }
             TimerState.Stopped -> {
-                fab_start.isEnabled = true
-                fab_pause.isEnabled = false
-                fab_stop.isEnabled = false
+                floatingActionButton_start.isEnabled = true
+                floatingActionButton_pause.isEnabled = false
+                floatingActionButton_stop.isEnabled = false
             }
             TimerState.Paused -> {
-                fab_start.isEnabled = true
-                fab_pause.isEnabled = false
-                fab_stop.isEnabled = true
+                floatingActionButton_start.isEnabled = true
+                floatingActionButton_pause.isEnabled = false
+                floatingActionButton_stop.isEnabled = true
             }
         }
     }

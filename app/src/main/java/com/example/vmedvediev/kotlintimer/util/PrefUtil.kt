@@ -25,33 +25,33 @@ object PrefUtil {
 
         fun getSecondsRemaining(context: Context): Long = getPreferences(context).getLong(SECONDS_REMAINING_ID, 0)
 
-        fun getTimerState(context: Context): TimerActivity.TimerState{
+        fun getTimerState(context: Context): TimerActivity.TimerState {
             val ordinal = getPreferences(context).getInt(TIMER_STATE_ID, 0)
             return TimerActivity.TimerState.values()[ordinal]
         }
 
-        fun setPreviousTimerLengthSeconds(seconds: Long, context: Context){
+        fun setPreviousTimerLengthSeconds(context: Context, seconds: Long) {
             getPreferencesEditor(context).apply {
                 putLong(PREVIOUS_TIMER_LENGTH_SECONDS_ID, seconds)
                 apply()
             }
         }
 
-        fun setTimerState(state: TimerActivity.TimerState, context: Context){
+        fun setTimerState(context: Context, state: TimerActivity.TimerState) {
             getPreferencesEditor(context).apply {
                 putInt(TIMER_STATE_ID, state.ordinal)
                 apply()
             }
         }
 
-        fun setSecondsRemaining(seconds: Long, context: Context){
+        fun setSecondsRemaining(context: Context, seconds: Long) {
             getPreferencesEditor(context).apply {
                 putLong(SECONDS_REMAINING_ID, seconds)
                 apply()
             }
         }
 
-        fun setAlarmSetTime(time: Long, context: Context){
+        fun setAlarmSetTime(context: Context, time: Long) {
             getPreferencesEditor(context).apply {
                 putLong(ALARM_SET_TIME_ID, time)
                 apply()

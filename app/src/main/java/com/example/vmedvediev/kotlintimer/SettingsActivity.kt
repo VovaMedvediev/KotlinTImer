@@ -14,8 +14,5 @@ class SettingsActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             title = "Settings"
         }
-
-
-
     }
 }

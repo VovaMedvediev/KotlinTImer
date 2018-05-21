@@ -42,7 +42,7 @@ object NotificationUtil {
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    fun showTimerExpired(context: Context){
+    fun showTimerExpired(context: Context) {
             val notificationBuilder = getNotificationBuilder(context)
                     .setContentTitle("Timer Expired!")
                     .setContentText("Start again?")
@@ -55,7 +55,7 @@ object NotificationUtil {
             }
         }
 
-    fun showTimerRunning(context: Context, wakeUpTime: Long){
+    fun showTimerRunning(context: Context, wakeUpTime: Long) {
         val notificationBuilder =  getNotificationBuilder(context)
                 .setContentTitle("Timer is Running.")
                 .setContentText("End: ${getDateFormat().format(Date(wakeUpTime))}")
@@ -70,7 +70,7 @@ object NotificationUtil {
         }
     }
 
-        fun showTimerPaused(context: Context){
+        fun showTimerPaused(context: Context) {
             val notificationBuilder = getNotificationBuilder(context)
                     .setContentTitle("Timer is paused.")
                     .setContentText("Resume?")
@@ -85,7 +85,7 @@ object NotificationUtil {
         }
 
         private fun getBasicNotificationBuilder(context: Context, channelId: String, playSound: Boolean)
-                : NotificationCompat.Builder{
+                : NotificationCompat.Builder {
             val notificationSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val notificationBuilder = NotificationCompat.Builder(context, channelId)
                     .setSmallIcon(R.drawable.ic_timer)
@@ -95,7 +95,7 @@ object NotificationUtil {
             return notificationBuilder
         }
 
-        private fun <T> getPendingIntentWithStack(context: Context, javaClass: Class<T>): PendingIntent{
+        private fun <T> getPendingIntentWithStack(context: Context, javaClass: Class<T>): PendingIntent {
             val resultIntent = Intent(context, javaClass)
             resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
@@ -109,8 +109,8 @@ object NotificationUtil {
         @TargetApi(26)
         private fun NotificationManager.createNotificationChannel(channelID: String,
                                                                   channelName: String,
-                                                                  playSound: Boolean){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                                                                  playSound: Boolean) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channelImportance = if (playSound) NotificationManager.IMPORTANCE_DEFAULT
                 else NotificationManager.IMPORTANCE_LOW
                 val notificationChannel = NotificationChannel(channelID, channelName, channelImportance)

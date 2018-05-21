@@ -1,10 +1,9 @@
 package com.example.vmedvediev.kotlintimer
 
-interface AppConstants {
-    companion object {
-        const val ACTION_STOP = "stop"
-        const val ACTION_PAUSE = "pause"
-        const val ACTION_RESUME = "resume"
-        const val ACTION_START = "start"
-    }
+object AppConstants {
+
+         const val ACTION_STOP = "stop"
+         const val ACTION_PAUSE = "pause"
+         const val ACTION_RESUME = "resume"
+         const val ACTION_START = "start"
 }

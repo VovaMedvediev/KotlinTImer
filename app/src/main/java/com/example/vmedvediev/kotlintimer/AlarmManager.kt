@@ -8,7 +8,7 @@ import com.example.vmedvediev.kotlintimer.util.PrefUtil
 
 object AlarmManager {
 
-    fun setAlarm(context: Context, nowSeconds: Long, secondsRemaining: Long): Long{
+    fun setAlarm(context: Context, nowSeconds: Long, secondsRemaining: Long): Long {
         val wakeUpTime = (nowSeconds + secondsRemaining) * 1000
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, TimerExpiredReceiver::class.java)
@@ -18,7 +18,7 @@ object AlarmManager {
         return wakeUpTime
     }
 
-    fun removeAlarm(context: Context){
+    fun removeAlarm(context: Context) {
         val intent = Intent(context, TimerExpiredReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
